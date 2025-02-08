@@ -18,6 +18,16 @@ type SdifEncoder struct {
 	w io.Writer
 }
 
+func (e *SdifEncoder) Encode(m Marshaler) error {
+	b, err := m.MarshalSdif()
+	if err != nil {
+		return err
+	}
+
+	_, err = e.w.Write(b)
+	return err
+}
+
 type SdifTag struct {
 	start, len int
 	code       string
@@ -198,9 +208,8 @@ func encodeDate(dst []byte, d time.Time) error {
 	return nil
 }
 
-type MeetPyramid struct {
-	fileDesc FileDescriptionRecord
-}
+//TODO time.Duration
+//TODO bool
 
 func main() {
 	fd := FileDescriptionRecord{
